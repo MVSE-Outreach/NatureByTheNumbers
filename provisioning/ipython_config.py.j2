@@ -1,0 +1,11 @@
+c = get_config()
+
+# Notebook config
+c.NotebookApp.certfile = u'/home/pynb/server.pem'
+c.NotebookApp.ip = '*'
+c.NotebookApp.open_browser = False
+c.NotebookApp.password = u'sha1:e15d783cd05e:55b31a6ae099a3c31ca95a8b23fab65314b325ae'
+c.NotebookApp.notebook_dir = u'/home/pynb/notebooks/'
+
+# Run on port 8000. which is our forwarded port
+c.NotebookApp.port = {{ notebook_server_port }}

@@ -1,0 +1,13 @@
+[Unit]
+Description=iPython Notebook Server
+
+[Service]
+Type=simple
+PIDFile=/var/run/ipython-notebook.pid
+ExecStart=/usr/bin/ipython notebook --profile=nbserver
+WorkingDirectory=/home/pynb/
+User=pynb
+Group=pynb
+
+[Install]
+WantedBy=multi-user.target
