@@ -1,0 +1,13 @@
+[Unit]
+Description=Grunt Presentation Service
+
+[Service]
+Type=simple
+PIDFile=/var/run/gserve.pid
+ExecStart=/usr/bin/grunt serve --port 8001
+WorkingDirectory=/home/vagrant/reveal.js/
+User=vagrant
+Group=vagrant
+
+[Install]
+WantedBy=multi-user.target

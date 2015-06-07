@@ -4,7 +4,7 @@
   vars:
     ansible_python_interpreter: /usr/bin/python2
   tasks:
-  - name: Install Python 3, pip and python data packages
+  - name: Install required system packages.
     become: True
     pacman: name={{ item }} state=latest
     with_items:
@@ -13,12 +13,27 @@
     - ipython
     - ipython-notebook
     - python-statsmodels
+    - nodejs
+    - npm
+    - git
 
   - name: Install bokeh with pip
     become: True
     pip: name={{ item }} state=latest
     with_items:
     - bokeh
+
+  - name: Install global grunt with npm
+    become: True
+    npm: global=yes name=grunt-cli state=latest
+
+  - name: Get reveal.js
+    shell: git clone https://github.com/hakimel/reveal.js.git creates="reveal.js/package.json"
+
+  - name: Install reveal.js deps
+    npm: path="~/reveal.js/"
+
+
 
   - name: install local mathjax
     shell: python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
@@ -61,14 +76,30 @@
     - BirdIndices.csv
     - AirQuality.csv
 
-  - name: load the ipython service
+  - name: load the services
     become: True
-    copy: src=ipython.service dest=/etc/systemd/system/ipython.service
+    copy: src={{ item }} dest=/etc/systemd/system/
+    with_items:
+    - ipython.service
+    - grunt.service
 
-  - name: enable the ipython service
+  - name: Activate the services
     become: True
-    shell: systemctl enable ipython
+    service: enabled=True  name={{ item }}  state=restarted
+    with_items:
+    - ipython
+    - grunt
 
-  - name: restart the ipython service
-    become: True
-    shell: systemctl restart ipython
+  # - name: enable the services
+  #   become: True
+  #   shell: systemctl enable {{ item }}
+  #   with_items:
+  #   - ipython
+  #   - grunt
+
+  # - name: restart the services
+  #   become: True
+  #   shell: systemctl restart {{ item }}
+  #   with_items:
+  #   - ipython
+  #   - grunt
