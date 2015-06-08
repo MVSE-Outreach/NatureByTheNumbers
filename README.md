@@ -20,6 +20,12 @@ If you'd rather not install the provisioners, and would prefer to install things
 manually, then please look at the ansible playbook to get a list of the dependencies
 for the notebook server setup.
 
+Presentation
+------------
+The VM is also configured to serve a reveal.js presentation, linked to your machine at port 8001.
+To replace this, edit *presentation/* to reflect your new slide deck. All files in the folder are copied
+to the root of the presentation serve directory.
+
 Skill Level: Advanced
 ---------------------
 Attendees are expected to understand basic Python. They should know about variables and functions, and should be comfortable with the idea of writing more than one line of Python at a time, rather than using only the interpreter.

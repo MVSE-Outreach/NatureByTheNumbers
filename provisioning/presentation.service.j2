@@ -4,7 +4,7 @@ Description=Grunt Presentation Service
 [Service]
 Type=simple
 PIDFile=/var/run/gserve.pid
-ExecStart=/usr/bin/grunt serve --port 8001
+ExecStart=/usr/bin/grunt serve --port {{ presentation_server_port }}
 WorkingDirectory=/home/vagrant/reveal.js/
 User=vagrant
 Group=vagrant

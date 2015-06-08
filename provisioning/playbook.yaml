@@ -12,16 +12,19 @@
     - python-pip
     - ipython
     - ipython-notebook
-    - python-statsmodels
     - nodejs
     - npm
     - git
 
-  - name: Install bokeh with pip
-    become: True
-    pip: name={{ item }} state=latest
-    with_items:
-    - bokeh
+
+  - name: Download bokeh AUR package
+    get_url: url=https://aur.archlinux.org/packages/py/python-bokeh/python-bokeh.tar.gz dest=/home/vagrant/
+
+  - name: Unpack the archive
+    unarchive: copy=false dest=/home/vagrant src=/home/vagrant/python-bokeh.tar.gz
+
+  - name: Run makepkg in the unpacked archive
+    shell: makepkg -s -i --noconfirm chdir=python-bokeh
 
   - name: Install global grunt with npm
     become: True
@@ -31,21 +34,15 @@
     shell: git clone https://github.com/hakimel/reveal.js.git creates="reveal.js/package.json"
 
   - name: Install reveal.js deps
-    npm: path="~/reveal.js/"
+    npm: path="~/reveal.js/" state=present
+    ignore_errors: True
+    # For some reason this errors at the moment, but the subsequent system still seems to work.
 
-
+  - name: Supply my presentation resources
+    copy: src=presentation/ dest="~/reveal.js/"
 
   - name: install local mathjax
     shell: python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
-
-  - name: Download seaborn AUR package
-    get_url: url=https://aur.archlinux.org/packages/py/python-seaborn/python-seaborn.tar.gz dest=/home/vagrant/
-
-  - name: Unpack the archive
-    unarchive: copy=false dest=/home/vagrant src=/home/vagrant/python-seaborn.tar.gz
-
-  - name: Run makepkg in the unpacked archive
-    shell: makepkg -s -i --noconfirm chdir=python-seaborn
 
   - name: make pynb user
     become: True
@@ -53,7 +50,7 @@
 
   - name: Generate Self-signed certificate
     become: true
-    shell: openssl req -newkey rsa:1024 -nodes -x509 -subj "/C=UK/ST=Bristol/L=Bristol/O=Digimakers/CN=NatureByTheNumbers" -days 365 -keyout /home/pynb/server.pem -out /home/pynb/server.pem creates=/home/pynb/server.pem
+    shell: openssl req -sha256 -newkey rsa:1024 -nodes -x509 -subj "/C=UK/ST=Bristol/L=Bristol/O=Digimakers/CN=NatureByTheNumbers" -days 365 -keyout /home/pynb/server.pem -out /home/pynb/server.pem creates=/home/pynb/server.pem
 
   - name: Generate ipython server profile
     shell: ipython profile create nbserver creates=/home/vagrant/.ipython/profile_nbserver/ipython_config.py
@@ -76,30 +73,19 @@
     - BirdIndices.csv
     - AirQuality.csv
 
-  - name: load the services
+  - name: load the ipython service
     become: True
     copy: src={{ item }} dest=/etc/systemd/system/
     with_items:
     - ipython.service
-    - grunt.service
+
+  - name: load the presentation service
+    become: True
+    template: src=presentation.service.j2 dest=/etc/systemd/system/presentation.service
 
   - name: Activate the services
     become: True
     service: enabled=True  name={{ item }}  state=restarted
     with_items:
     - ipython
-    - grunt
-
-  # - name: enable the services
-  #   become: True
-  #   shell: systemctl enable {{ item }}
-  #   with_items:
-  #   - ipython
-  #   - grunt
-
-  # - name: restart the services
-  #   become: True
-  #   shell: systemctl restart {{ item }}
-  #   with_items:
-  #   - ipython
-  #   - grunt
+    - presentation
