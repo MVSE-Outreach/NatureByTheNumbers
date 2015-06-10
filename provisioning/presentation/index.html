@@ -28,6 +28,9 @@
             link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
             document.getElementsByTagName( 'head' )[0].appendChild( link );
         </script>
+        <style>
+
+        </style>
 
         <!--[if lt IE 9]>
         <script src="lib/js/html5shiv.js"></script>
@@ -40,7 +43,7 @@
 
             <!-- Any section element inside of this container is displayed as a slide -->
             <div class="slides">
-                <section>
+                <section id="title">
                     <h1>Nature By The Numbers</h1>
                     <h3>An Introduction To Data Science</h3>
                     <p>
@@ -50,7 +53,7 @@
                     Meet and greet. Make sure everyone is settled.
                     </aside>
                 </section>
-                <section>
+                <section id="whoami">
                     <h2> A Bit Of Background </h2>
                     <h4> Who am I? </h4>
                     <ul>
@@ -60,33 +63,94 @@
                         <li>Decent Cook</li>
                     </ul>
                     <aside class="notes">
-                        HAHAHAHA CAN'T IMAGINE
+                        This is so American. Maybe remove it?
                     </aside>
                 </section>
-                <section>
-                    <h2> Who are you? </h2>
-                    <p>
-                        So I know what's what...
-                    </p>
+                <section id="audience">
+                    <h2> Quick Survey </h2>
                     <ul>
-                        <li class="fragment"> Hands up if you've done Python </li>
-                        <li class="fragment"> Hands up if you've done any statistics </li>
-                        <li class="fragment"> Hands up if you've been to Digimakers before </li>
-                        <li class="fragment"> Hands up if you've been dragged here against your will </li>
+                        <li> Hands up if you've ever <span class="fragment">been to Digimakers before</span> </li>
+                        <li> Hands up if you've ever <span class="fragment">done Python coding before</span> </li>
+                        <li> Hands up if you've ever <span class="fragment">done any statistics </span></li>
+                        <li> Hands up if you've ever <span class="fragment">been dragged here against your will</span></li>
+                        <li> Hands up if you've ever <span class="fragment">put your hands up because some guy with a beard asked you a bunch of questions?</span></li>
                     </ul>
                     <aside class="notes">
                         To get an idea of which sections we should focus time on.
                         Possibly a little aside of the voting system.
                     </aside>
                 </section>
+                <section id="agenda">
+                    <section id="theplan">
+                        <h2>What are we doing today?</h2>
+                        <h4 class="fragment">I'm so glad you asked</h4>
+                        <p class="fragment">Let's examine <span class="fragment highlight-blue">The Plan</span></p>
+                    </section>
+                    <section id="agenda-toolkit">
+                        <h2>Look At Our Toolkit</h2>
+                        <p>We'll get you guys connected.</p>
+                        <p>Then we'll go over some tool basics.</p>
+                    </section>
+                    <section id="agenda-ideas">
+                        <h2>Practice Some New Ideas</h2>
+                        <p>Using the tools, we'll learn and practice some data-fu.</p>
+                    </section>
+                    <section id="agenda-casestudy">
+                        <h2>Case Study: Birds</h2>
+                        <p>
+                            Then, with your freshly minted green belts in data-fu,
+                            you'll test your mettle against a case study of some real
+                            bird population data. KA-POW!
+                        </p>
+                    </section>
+                </section>
                 <section>
-                    <h2> What is 'Data Science' anyway? </h2>
-                    <p> Transforming <span class="highlight-red">data</span> ... </p>
-                    <p class="fragment"> ... into <span class="hightlight-blue">information</span> </p>
-                    <img class="fragment" src="cheeses.jpg" />
-                    <aside class="notes">
-                        Fusion of statistics, programming and detective work.
-                    </aside>
+                    <section id="ipythonurl">
+                        <h2> Let's Get You Logged In </h2>
+                        <p> Please open a web browser and go here:</p>
+                        <p id="jshostname">
+                            <script type="text/javascript">
+                                document.getElementById('jshostname').innerHTML = "<a>https://" + window.location.hostname + ":8000" + "</a>";
+                            </script>
+                        </p>
+                    </section>
+                    <section id="ipythonlogin">
+                        <img src="images/jupyterlogin.png" />
+                        <p>The password is <span class="fragment highlight-red">digimakers</span></p>
+                        <small class="fragment current-visible">Original, right?</small>
+                        <aside class="notes">
+                            Need to prepare for moving to jupyter tab.
+                        </aside>
+                    </section>
+                    <section id="ipythonsegment">
+                        <h1>iPython with a jupyter notebook!</h1>
+                        <aside class="notes">
+                        Follow the notebooks.
+                        </aside>
+                    </section>
+                </section>
+                <section>
+                    <section id="casestudydata">
+                    <h2> Your Mission </h2>
+                    <h4> Should You Choose To Accept It </h4>
+                    <p> There is a file of CSV data, located at <strong>../BirdIndices.csv</strong>.</p>
+                    <p> You must load it up and answer some questions! </p>
+                    </section>
+                    <section id="casestudyexplanation">
+                    <h2> What Is This? </h2>
+                    <p> This is a <strong>population index</strong>. Each column is a <strong>collection of species</strong>, and each row is a year.
+                    <p><strong>Index</strong> is just a way of saying it's not the exact number of birds, it's just a proportion relative to some agreed amount (the population when first recorded, in this case).</p>
+                    </section>
+                    <section id="casestudyquestions">
+                        <h2>Questions</h2>
+                        <ol>
+                            <li class="fragment">What is the average index from 2013?</li>
+                            <li class="fragment">What are the best and worst performing species groups in 2013?</li>
+                            <li class="fragment">Can you draw a bar chart of 2013?</li>
+                        </ol>
+                        <p class="fragment"> And your <strong>SUPER BONUS QUESTION</strong></p>
+                        <p class="fragment"> Draw a line chart showing the full 1970-2013 history of the worst and best performing categories from 2013.</p>
+                    </section>
                 </section>
             </div>
 
@@ -106,6 +170,7 @@
                 center: true,
                 touch: true,
                 hideAddressBar: true,
+                controls: false,
 
                 transition: 'slide', // none/fade/slide/convex/concave/zoom
 
@@ -114,7 +179,8 @@
                     { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
                     { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
                     { src: 'plugin/zoom-js/zoom.js', async: true },
-                    { src: 'plugin/notes/notes.js', async: true }
+                    { src: 'plugin/notes/notes.js', async: true },
+                    { src: 'plugin/math/math.js', async: true }
                 ]
             });
 
