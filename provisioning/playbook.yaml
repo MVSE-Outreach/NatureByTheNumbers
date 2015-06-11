@@ -17,15 +17,9 @@
     - npm
     - git
 
-
-  - name: Download bokeh AUR package
-    get_url: url=https://aur.archlinux.org/packages/py/python-bokeh/python-bokeh.tar.gz dest=/home/vagrant/
-
-  - name: Unpack the archive
-    unarchive: copy=false dest=/home/vagrant src=/home/vagrant/python-bokeh.tar.gz
-
-  - name: Run makepkg in the unpacked archive
-    shell: makepkg -s -i --noconfirm chdir=python-bokeh
+  - name: install bokeh with pip
+    become: True
+    pip: name=bokeh state=latest executable=/usr/bin/pip3
 
   - name: Install global grunt with npm
     become: True
