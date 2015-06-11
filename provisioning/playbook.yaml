@@ -6,12 +6,13 @@
   tasks:
   - name: Install required system packages.
     become: True
-    pacman: name={{ item }} state=latest
+    pacman: name={{ item }} state=latest update_cache=yes
     with_items:
     - python
     - python-pip
     - ipython
     - ipython-notebook
+    - python-statsmodels
     - nodejs
     - npm
     - git
@@ -62,9 +63,9 @@
     become: True
     shell: rm -rf /home/pynb/.ipython && cp -r /home/vagrant/.ipython /home/pynb/.ipython && chown -R pynb /home/pynb/.ipython
 
-  - name: Make notebook directory
+  - name: Populate The notebooks
     become: True
-    file: path=/home/pynb/notebooks state=directory owner=pynb group=pynb
+    copy: owner=pynb group=pynb src=notebooks dest=/home/pynb/
 
   - name: Copy data files
     become: True
