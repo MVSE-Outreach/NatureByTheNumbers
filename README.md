@@ -1,6 +1,6 @@
 Nature By The Numbers - Intro To Data Science
 =============================================
-
+Version 1.0
 Setup materials for the June 2015 Digimakers workshop of the same name.
 
 Technical Requirements For Host Machine
