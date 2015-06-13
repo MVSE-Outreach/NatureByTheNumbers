@@ -4,33 +4,40 @@
   vars:
     ansible_python_interpreter: /usr/bin/python2
   tasks:
-  - name: Install Python 3, pip and python data packages
+  - name: Install required system packages.
     become: True
-    pacman: name={{ item }} state=latest
+    pacman: name={{ item }} state=latest update_cache=yes
     with_items:
     - python
     - python-pip
     - ipython
     - ipython-notebook
     - python-statsmodels
+    - nodejs
+    - npm
+    - git
 
-  - name: Install bokeh with pip
+  - name: install bokeh with pip
     become: True
-    pip: name={{ item }} state=latest
-    with_items:
-    - bokeh
+    pip: name=bokeh state=latest executable=/usr/bin/pip3
+
+  - name: Install global grunt with npm
+    become: True
+    npm: global=yes name=grunt-cli state=latest
+
+  - name: Get reveal.js
+    shell: git clone https://github.com/hakimel/reveal.js.git creates="reveal.js/package.json"
+
+  - name: Install reveal.js deps
+    npm: path="~/reveal.js/" state=present
+    ignore_errors: True
+    # For some reason this errors at the moment, but the subsequent system still seems to work.
+
+  - name: Supply my presentation resources
+    copy: src=presentation/ dest="~/reveal.js/"
 
   - name: install local mathjax
     shell: python -c "from IPython.external import mathjax; mathjax.install_mathjax()"
-
-  - name: Download seaborn AUR package
-    get_url: url=https://aur.archlinux.org/packages/py/python-seaborn/python-seaborn.tar.gz dest=/home/vagrant/
-
-  - name: Unpack the archive
-    unarchive: copy=false dest=/home/vagrant src=/home/vagrant/python-seaborn.tar.gz
-
-  - name: Run makepkg in the unpacked archive
-    shell: makepkg -s -i --noconfirm chdir=python-seaborn
 
   - name: make pynb user
     become: True
@@ -38,7 +45,7 @@
 
   - name: Generate Self-signed certificate
     become: true
-    shell: openssl req -newkey rsa:1024 -nodes -x509 -subj "/C=UK/ST=Bristol/L=Bristol/O=Digimakers/CN=NatureByTheNumbers" -days 365 -keyout /home/pynb/server.pem -out /home/pynb/server.pem creates=/home/pynb/server.pem
+    shell: openssl req -sha256 -newkey rsa:1024 -nodes -x509 -subj "/C=UK/ST=Bristol/L=Bristol/O=Digimakers/CN=NatureByTheNumbers" -days 365 -keyout /home/pynb/server.pem -out /home/pynb/server.pem creates=/home/pynb/server.pem
 
   - name: Generate ipython server profile
     shell: ipython profile create nbserver creates=/home/vagrant/.ipython/profile_nbserver/ipython_config.py
@@ -50,9 +57,9 @@
     become: True
     shell: rm -rf /home/pynb/.ipython && cp -r /home/vagrant/.ipython /home/pynb/.ipython && chown -R pynb /home/pynb/.ipython
 
-  - name: Make notebook directory
+  - name: Populate The notebooks
     become: True
-    file: path=/home/pynb/notebooks state=directory owner=pynb group=pynb
+    copy: owner=pynb group=pynb src=notebooks dest=/home/pynb/
 
   - name: Copy data files
     become: True
@@ -63,12 +70,17 @@
 
   - name: load the ipython service
     become: True
-    copy: src=ipython.service dest=/etc/systemd/system/ipython.service
+    copy: src={{ item }} dest=/etc/systemd/system/
+    with_items:
+    - ipython.service
 
-  - name: enable the ipython service
+  - name: load the presentation service
     become: True
-    shell: systemctl enable ipython
+    template: src=presentation.service.j2 dest=/etc/systemd/system/presentation.service
 
-  - name: restart the ipython service
+  - name: Activate the services
     become: True
-    shell: systemctl restart ipython
+    service: enabled=True  name={{ item }}  state=restarted
+    with_items:
+    - ipython
+    - presentation

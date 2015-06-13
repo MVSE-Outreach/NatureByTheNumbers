@@ -1,6 +1,6 @@
 Nature By The Numbers - Intro To Data Science
 =============================================
-
+Version 1.0
 Setup materials for the June 2015 Digimakers workshop of the same name.
 
 Technical Requirements For Host Machine
@@ -19,6 +19,12 @@ data you'd rather not blast out over the wifi for all to see.
 If you'd rather not install the provisioners, and would prefer to install things
 manually, then please look at the ansible playbook to get a list of the dependencies
 for the notebook server setup.
+
+Presentation
+------------
+The VM is also configured to serve a reveal.js presentation, linked to your machine at port 8001.
+To replace this, edit *presentation/* to reflect your new slide deck. All files in the folder are copied
+to the root of the presentation serve directory.
 
 Skill Level: Advanced
 ---------------------
